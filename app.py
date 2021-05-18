@@ -21,7 +21,7 @@ if __name__ == '__main__':
 def index():
     return '.'
 
-@app.route('/setwebhook', methods=['GET', 'POST'])
+@app.route('/set_webhook', methods=['GET', 'POST'])
 def set_webhook():
     # we use the bot object to link the bot to our app which live
     # in the link provided by URL
