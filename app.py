@@ -21,12 +21,13 @@ if __name__ == '__main__':
 def index():
     return '.'
 
+# Only run this end point when the tele bot has changed
 @app.route('/set_webhook', methods=['GET', 'POST'])
 def set_webhook():
-    # we use the bot object to link the bot to our app which live
-    # in the link provided by URL
+    # Use the bot object to link the bot to the heroku app which lives in the link provided by URL
     s = bot.setWebhook('{URL}{HOOK}'.format(URL=URL, HOOK=TOKEN))
-    # something to let us know things work
+    
+    # Feedback text (prints on page)
     if s:
         return "webhook setup ok"
     else:
@@ -44,24 +45,19 @@ def respond():
   # for debugging purposes only
   print("got text message :", text)
   
-  # the first time you chat with the bot AKA the welcoming message
+  # First time a user chats with the bot, send the welcoming message
   if text == "/start":
-      # print the welcoming message
-      bot_welcome = """
-      Welcome to coolAvatar bot, the bot is using the service from http://avatars.adorable.io/ to generate cool looking avatars based on the name you enter so please enter a name and the bot will reply with an avatar for your name.
-      """
-      # send the welcoming message
-      bot.sendMessage(chat_id=chat_id, text=bot_welcome, reply_to_message_id=msg_id)
+    bot_welcome = """
+    Welcome to MapleSea Bot! 
+    
+    This bot feeds server announcements from MapleSea's discord server to our associated Telegram Channel, https://t.me/MapleSeaAnnouncements.
+
+    Beyond that, there's nothing more to see here!
+    """
+    # Send the welcoming message
+    bot.sendMessage(chat_id=chat_id, text=bot_welcome, reply_to_message_id=msg_id)
+  # Any other message sent by user
   else:
-      try:
-          # clear the message we got from any non alphabets
-          text = re.sub(r"\W", "_", text)
-          # create the api link for the avatar based on http://avatars.adorable.io/
-          url = "https://api.adorable.io/avatars/285/{}.png".format(text.strip())
-          # reply with a photo to the name the user sent,
-          # note that you can send photos by url and telegram will fetch it for you
-          bot.sendPhoto(chat_id=chat_id, photo=url, reply_to_message_id=msg_id)
-      except Exception:
-          # if things went wrong
-          bot.sendMessage(chat_id=chat_id, text="There was a problem in the name you used, please enter different name", reply_to_message_id=msg_id)
+    reply = 'There is really nothing else I can offer here </3. Go to our channel! https://t.me/MapleSeaAnnouncements <3'
+    bot.sendMessage(chat_id=chat_id, text=reply, reply_to_message_id=msg_id)
   return 'ok'
