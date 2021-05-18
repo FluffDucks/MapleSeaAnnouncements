@@ -1,11 +1,11 @@
 from flask import Flask, request
 import telegram
-from telebot.credentials import bot_token, bot_user_name,URL
+from telegram_bot.credentials import bot_token, bot_user_name,URL
 
 # Declare global vars
 global bot
 global TOKEN
-global channel
+global channel_handle
 TOKEN = bot_token
 bot = telegram.Bot(token=TOKEN)
 channel_handle = 'MapleSeaAnnouncements'
