@@ -1,14 +1,23 @@
 from flask import Flask, request
 import telegram
 from telegram_bot.credentials import bot_token, bot_user_name, URL
+import discord
+from discord_bot.credentials import disc_token
 
-# Declare global vars
+# Declare tele global vars
 global bot
 global TOKEN
 global channel_id
 TOKEN = bot_token
-bot = telegram.Bot(token=TOKEN)
 channel_id = '-1001431666156'
+bot = telegram.Bot(token=TOKEN) # Run telebot
+
+# Declare disc global vars
+global d_bot
+global D_TOKEN
+d_bot = discord.Client()
+D_TOKEN = disc_token
+d_bot.run(D_TOKEN) # Run dbot
 
 # start the flask app
 app = Flask(__name__)
@@ -17,7 +26,12 @@ if __name__ == '__main__':
     # threaded arg which allows app to have more than one thread
     app.run(threaded=True)
 
+######### DISCORD BOT END POINTS ##########
+@d_bot.event
+async def on_ready():
+    print(f'{d_bot.user} has connected to Discord!')
 
+######### TELE BOT END POINTS ##########
 @app.route('/')
 def index():
     return '.'
@@ -76,5 +90,5 @@ def post_to_channel():
     # }
     content = request.get_json(force=True)
     new_post = '_NEW ANNOUNCEMENT_\n*{}*\n\n{}'.format(content.get('title'), content.get('body'))
-    bot.sendMessage(chat_id=channel_id, text=new_post)
+    bot.sendMessage(chat_id=channel_id, text=new_post, parse_mode = 'Markdown')
     return 'post_to_channel() done running'
