@@ -63,3 +63,6 @@ def respond():
     else:
         # Debugging
         print('non-message update received from telebot')
+    
+    # Debugging, End of method call
+    return 'respond function finished running'
