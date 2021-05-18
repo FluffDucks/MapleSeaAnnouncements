@@ -5,10 +5,10 @@ from telegram_bot.credentials import bot_token, bot_user_name, URL
 # Declare global vars
 global bot
 global TOKEN
-global channel_handle
+global channel_id
 TOKEN = bot_token
 bot = telegram.Bot(token=TOKEN)
-channel_handle = 'MapleSeaAnnouncements'
+channel_id = '-1001431666156'
 
 # start the flask app
 app = Flask(__name__)
@@ -34,7 +34,7 @@ def set_webhook():
     else:
         return "webhook setup failed"
 
-# When a message is sent to the telebot
+# When a message is sent to the telebot, telegram calls this endpoint with a request object
 @app.route('/{}'.format(TOKEN), methods=['POST'])
 def respond():
     # Retrieve the message in JSON and then transform it to Telegram object
@@ -65,4 +65,16 @@ def respond():
         print('non-message update received from telebot')
     
     # Debugging, End of method call
-    return 'respond function finished running'
+    return 'respond() done running'
+
+@app.route('/post_to_channel', methods=['POST'])
+def post_to_channel():
+    # content format:
+    # {
+    #   'title': '',
+    #   'body': ''
+    # }
+    content = request.get_json(force=True)
+    new_post = '_NEW ANNOUNCEMENT_\n*{}*\n\n{}'.format(content.get('title'), content.get('body'))
+    bot.sendMessage(chat_id=channel_id, text=new_post)
+    return 'post_to_channel() done running'
