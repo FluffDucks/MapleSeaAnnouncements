@@ -48,11 +48,7 @@ def respond():
   # First time a user chats with the bot, send the welcoming message
   if text == "/start":
     bot_welcome = """
-    Welcome to MapleSea Bot! 
-    
-    This bot feeds server announcements from MapleSea's discord server to our associated Telegram Channel, https://t.me/MapleSeaAnnouncements.
-
-    Beyond that, there's nothing more to see here!
+    Welcome to MapleSea Bot!\nThis bot feeds server announcements from MapleSea's discord server to our associated Telegram Channel, https://t.me/MapleSeaAnnouncements.\nBeyond that, there's nothing more to see here!
     """
     # Send the welcoming message
     bot.sendMessage(chat_id=chat_id, text=bot_welcome, reply_to_message_id=msg_id)
