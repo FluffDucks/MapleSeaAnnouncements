@@ -13,6 +13,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+  print(colored('DISC: message received', 'magenta'))
   # check that message is from our maplesea-announcements channel
   if message.channel.id == 844288549507170314: # TODO: Use env vars
     # Logging
