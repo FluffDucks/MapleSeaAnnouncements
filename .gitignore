@@ -1,1 +1,4 @@
-/botenv
+__pycache__/
+botenv/
+botenv/lib/*
+.env
