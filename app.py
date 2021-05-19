@@ -1,32 +1,33 @@
 import os
+from termcolor import colored
 from flask import Flask, request
 import telegram
-import discord
+from dbot import start_dbot
 
 # Declare tele vars
 TBOT_TOKEN = os.getenv('TBOT_TOKEN')
 TCHANNEL_ID = os.getenv('TCHANNEL_ID')
 bot = telegram.Bot(token=TBOT_TOKEN) # Run telebot
 
-# Declare disc vars
-# D_TOKEN = os.getenv('D_TOKEN')
-# d_bot = discord.Client()
-# d_bot.run(D_TOKEN) # Run dbot
-
 # Declare heroku vars
 H_URL = os.getenv('H_URL')
 
+# Declare disc vars
+D_TOKEN = os.getenv('D_TOKEN')
+DCHANNEL_ID = os.getenv('DCHANNEL_ID')
+
 # start the flask app
 app = Flask(__name__)
-
 if __name__ == '__main__':
     # threaded arg which allows app to have more than one thread
     app.run(threaded=True)
 
-######### DISCORD BOT END POINTS ##########
-# @d_bot.event
-# async def on_ready():
-#     print(f'{d_bot.user} has connected to Discord!')
+# Print welcome and state messages
+print(colored('SYS:  Welcome :3', 'grey'))
+print(colored('SYS:  1) telebot and server is now live!', 'grey'))
+
+# start discord bot
+start_dbot(D_TOKEN)
 
 ######### TELE BOT END POINTS ##########
 @app.route('/')
@@ -78,6 +79,7 @@ def respond():
     # Debugging, End of method call
     return 'respond() done running'
 
+# TODO: Check for auth before allowing to post
 @app.route('/post_to_channel', methods=['POST'])
 def post_to_channel():
     # content format:
@@ -89,3 +91,5 @@ def post_to_channel():
     new_post = '_NEW ANNOUNCEMENT_\n*{}*\n\n{}'.format(content.get('title'), content.get('body'))
     bot.sendMessage(chat_id=TCHANNEL_ID, text=new_post, parse_mode = 'Markdown')
     return 'post_to_channel() done running'
+
+# def
