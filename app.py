@@ -27,7 +27,7 @@ print(colored('SYS:  Welcome :3', 'grey'))
 print(colored('SYS:  1) telebot and server is now live!', 'grey'))
 
 # start discord bot
-start_dbot(D_TOKEN)
+# start_dbot(D_TOKEN)
 
 ######### TELE BOT END POINTS ##########
 @app.route('/')
