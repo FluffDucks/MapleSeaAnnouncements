@@ -1,23 +1,20 @@
+import os
 from flask import Flask, request
 import telegram
-from telegram_bot.credentials import bot_token, bot_user_name, URL
 import discord
-from discord_bot.credentials import disc_token
 
-# Declare tele global vars
-global bot
-global TOKEN
-global channel_id
-TOKEN = bot_token
-channel_id = '-1001431666156'
-bot = telegram.Bot(token=TOKEN) # Run telebot
+# Declare tele vars
+TBOT_TOKEN = os.getenv('TBOT_TOKEN')
+TCHANNEL_ID = os.getenv('TCHANNEL_ID')
+bot = telegram.Bot(token=TBOT_TOKEN) # Run telebot
 
-# Declare disc global vars
-global d_bot
-global D_TOKEN
-d_bot = discord.Client()
-D_TOKEN = disc_token
-d_bot.run(D_TOKEN) # Run dbot
+# Declare disc vars
+# D_TOKEN = os.getenv('D_TOKEN')
+# d_bot = discord.Client()
+# d_bot.run(D_TOKEN) # Run dbot
+
+# Declare heroku vars
+H_URL = os.getenv('H_URL')
 
 # start the flask app
 app = Flask(__name__)
@@ -27,9 +24,9 @@ if __name__ == '__main__':
     app.run(threaded=True)
 
 ######### DISCORD BOT END POINTS ##########
-@d_bot.event
-async def on_ready():
-    print(f'{d_bot.user} has connected to Discord!')
+# @d_bot.event
+# async def on_ready():
+#     print(f'{d_bot.user} has connected to Discord!')
 
 ######### TELE BOT END POINTS ##########
 @app.route('/')
@@ -40,7 +37,7 @@ def index():
 @app.route('/set_webhook', methods=['GET', 'POST'])
 def set_webhook():
     # Use the bot object to link the bot to the heroku app which lives in the link provided by URL
-    s = bot.setWebhook('{URL}{HOOK}'.format(URL=URL, HOOK=TOKEN))
+    s = bot.setWebhook('{URL}{HOOK}'.format(URL=H_URL, HOOK=TBOT_TOKEN))
 
     # Feedback text (prints on page)
     if s:
@@ -49,7 +46,7 @@ def set_webhook():
         return "webhook setup failed"
 
 # When a message is sent to the telebot, telegram calls this endpoint with a request object
-@app.route('/{}'.format(TOKEN), methods=['POST'])
+@app.route('/{}'.format(TBOT_TOKEN), methods=['POST'])
 def respond():
     # Retrieve the message in JSON and then transform it to Telegram object
     update = telegram.Update.de_json(request.get_json(force=True), bot)
@@ -90,5 +87,5 @@ def post_to_channel():
     # }
     content = request.get_json(force=True)
     new_post = '_NEW ANNOUNCEMENT_\n*{}*\n\n{}'.format(content.get('title'), content.get('body'))
-    bot.sendMessage(chat_id=channel_id, text=new_post, parse_mode = 'Markdown')
+    bot.sendMessage(chat_id=TCHANNEL_ID, text=new_post, parse_mode = 'Markdown')
     return 'post_to_channel() done running'
