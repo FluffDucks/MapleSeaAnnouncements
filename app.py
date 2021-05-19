@@ -91,5 +91,3 @@ def post_to_channel():
     new_post = '_NEW ANNOUNCEMENT_\n*{}*\n\n{}'.format(content.get('title'), content.get('body'))
     bot.sendMessage(chat_id=TCHANNEL_ID, text=new_post, parse_mode = 'Markdown')
     return 'post_to_channel() done running'
-
-# def
