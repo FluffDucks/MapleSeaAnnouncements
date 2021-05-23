@@ -80,6 +80,6 @@ def post_to_channel():
     #   'body': ''
     # }
     content = request.get_json(force=True)
-    new_post = '*NEW ANNOUNCEMENT 🍄*\n{}'.format(content.get('title'), content.get('body'))
+    new_post = '*NEW ANNOUNCEMENT 🍄*\n{}'.format(content.get('body'))
     bot.sendMessage(chat_id=TCHANNEL_ID, text=new_post, parse_mode = 'Markdown')
     return 'post_to_channel() done running'
