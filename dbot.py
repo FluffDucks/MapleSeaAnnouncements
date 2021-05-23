@@ -1,6 +1,7 @@
 import discord
 from termcolor import colored
 import requests
+import json
 
 client = discord.Client()
 
@@ -24,8 +25,8 @@ async def on_message(message):
       'body': message.content
     }
     # Forward to tele api
-    # r = requests.post('localhost:5000/post_to_channel', data=msg)
-    # print(colored('DISC: Posted to tele: {}'.format(r.text), 'magenta'))
+    r = requests.post('https://maplesea-announcements.herokuapp.com/post_to_channel', data=json.dumps(msg))
+    print(colored('DISC: Posted to tele: {}'.format(r.text), 'magenta'))
   
 
 # TODO: Message edited?
@@ -41,6 +42,5 @@ async def on_message(message):
     #   type=<MessageType.default: 0> 
     #   author=<Member id=392691520358055947 name='FluffDucks' discriminator='8030' bot=False nick=None guild=<Guild id=844286929100341289 name="FluffDucks' Dev Server" shard_id=None chunked=False member_count=2>> 
     #   flags=<MessageFlags value=0>>
-
     # if message.content.startswith('$hello'):
     #     await message.channel.send('Hello!')

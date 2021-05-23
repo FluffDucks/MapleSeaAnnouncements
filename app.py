@@ -2,6 +2,9 @@ import os
 from termcolor import colored
 from flask import Flask, request
 import telegram
+from discord.ext import commands
+from functools import partial
+from threading import Thread
 from dbot import start_dbot
 
 # Declare tele vars
@@ -19,15 +22,23 @@ DCHANNEL_ID = os.getenv('DCHANNEL_ID')
 # start the flask app
 app = Flask(__name__)
 if __name__ == '__main__':
-    # threaded arg which allows app to have more than one thread
-    app.run(threaded=True)
+    # # threaded arg which allows app to have more than one thread
+    # app.run(threaded=True)
+
+    # Make a partial app.run to pass args/kwargs to it
+    partial_run = partial(app.run, host="0.0.0.0", port=80, debug=True, use_reloader=False)
+    # Run the Flask app in another thread.
+    # Unfortunately this means we can't have hot reload
+    # (We turned it off above) Because there's no signal support.
+    t = Thread(target=partial_run)
+    t.start()
 
 # Print welcome and state messages
 print(colored('SYS:  Welcome :3', 'grey'))
 print(colored('SYS:  1) telebot and server is now live!', 'grey'))
 
 # start discord bot
-# start_dbot(D_TOKEN)
+start_dbot(D_TOKEN)
 
 ######### TELE BOT END POINTS ##########
 @app.route('/')
