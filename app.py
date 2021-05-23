@@ -2,8 +2,6 @@ import os
 from termcolor import colored
 from flask import Flask, request
 import telegram
-from functools import partial
-from threading import Thread
 
 # Declare tele vars
 TBOT_TOKEN = os.getenv('TBOT_TOKEN')
@@ -74,7 +72,7 @@ def respond():
     return 'respond() done running'
 
 # TODO: Check for auth before allowing to post
-@app.route('/post_to_channel', methods=['POST'])
+@app.route('/{}/post_to_channel'.format(TBOT_TOKEN), methods=['POST'])
 def post_to_channel():
     # content format:
     # {
@@ -82,6 +80,6 @@ def post_to_channel():
     #   'body': ''
     # }
     content = request.get_json(force=True)
-    new_post = '_NEW ANNOUNCEMENT_\n*{}*\n\n{}'.format(content.get('title'), content.get('body'))
+    new_post = '*NEW ANNOUNCEMENT 🍄*\n{}'.format(content.get('title'), content.get('body'))
     bot.sendMessage(chat_id=TCHANNEL_ID, text=new_post, parse_mode = 'Markdown')
     return 'post_to_channel() done running'
