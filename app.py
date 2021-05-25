@@ -1,11 +1,13 @@
 import os
 from termcolor import colored
-from flask import Flask, request
+from flask import Flask, request, render_template
 import telegram
 
 # Declare tele vars
 TBOT_TOKEN = os.getenv('TBOT_TOKEN')
 TCHANNEL_ID = os.getenv('TCHANNEL_ID')
+DEV_TCHANNEL_ID = os.getenv('DEV_TCHANNEL_ID')
+CHANNEL_ID = TCHANNEL_ID # Set initial channel id to dev channel
 bot = telegram.Bot(token=TBOT_TOKEN) # Run telebot
 
 # Declare heroku vars
@@ -24,7 +26,11 @@ print(colored('SYS:  1) telebot and server is now live!', 'grey'))
 ######### TELE BOT END POINTS ##########
 @app.route('/')
 def index():
-    return 'annyeong'
+    if CHANNEL_ID == TCHANNEL_ID:
+        channel_name = '[LIVE] MapleSea Announcements (Unofficial)'
+    else:
+        channel_name = '[DEV] Dev Channel'
+    return render_template('views/index.html', channel_name=channel_name)
 
 # Only run this end point when the tele bot has changed
 @app.route('/set_webhook', methods=['GET', 'POST'])
@@ -71,7 +77,6 @@ def respond():
     # Debugging, End of method call
     return 'respond() done running'
 
-# TODO: Check for auth before allowing to post
 @app.route('/{}/post_to_channel'.format(TBOT_TOKEN), methods=['POST'])
 def post_to_channel():
     # content format:
@@ -81,5 +86,7 @@ def post_to_channel():
     # }
     content = request.get_json(force=True)
     new_post = '*NEW ANNOUNCEMENT 🍄*\n{}'.format(content.get('body'))
-    bot.sendMessage(chat_id=TCHANNEL_ID, text=new_post, parse_mode = 'Markdown')
+    bot.sendMessage(chat_id=TCHANNEL_ID, text=new_post, parse_mode='Markdown')
     return 'post_to_channel() done running'
+
+
