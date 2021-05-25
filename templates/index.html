@@ -14,15 +14,18 @@
   Currently sending posts to: <b>{{channel_name}}</b>
 </p>
 
+{% if is_authorised %}
+<form method="get">
+  <input type="submit" name="cc_pls" value="cc pls"/>
+</form>
+{% endif %}
+
 <p>
   <form method="post">
     <label for="code">Access Code</label><br>
-    <input type="text" id="code" name="code" /><br>
-    <input type="submit"/>
+    <input type="password" id="code" name="code" /><br>
+    <input type="submit" name="submit_code"/>
   </form>
 </p>
-{% if is_authorised %}
-  <button>cc pls</button>
-{% endif %}
 </body>
 </html>

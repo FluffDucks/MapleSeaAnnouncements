@@ -30,18 +30,25 @@ def index():
     is_authorised = False
 
     # If an access code is entered
-    if request.method == 'POST':
+    if request.method == 'POST' and 'submit_code' in request.form:
         code = request.form.get('code') 
         if code == ACCESS_CODE:
             is_authorised = True
         else:
             is_authorised = False
 
+    # If ccpls button is clicked
+    if request.method == 'GET' and 'cc_pls' in request.form:
+        # Toggle CHANNEL_ID
+        CHANNEL_ID = TCHANNEL_ID if CHANNEL_ID == DEV_TCHANNEL_ID else TCHANNEL_ID
+
     # Check which channel is live
     if CHANNEL_ID == TCHANNEL_ID:
         channel_name = '[LIVE] MapleSea Announcements (Unofficial)'
     else:
         channel_name = '[DEV] Dev Channel'
+
+    # Render template
     return render_template('index.html', channel_name=channel_name, is_authorised=is_authorised)
 
 # Only run this end point when the tele bot has changed
