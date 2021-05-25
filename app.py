@@ -115,7 +115,19 @@ def post_to_channel():
     # }
     content = request.get_json(force=True)
     new_post = '*NEW ANNOUNCEMENT 🍄*\n{}'.format(content.get('body'))
-    bot.sendMessage(chat_id=CHANNEL_ID, text=new_post, parse_mode='MarkdownV2')
+    try:
+        bot.sendMessage(chat_id=CHANNEL_ID, text=new_post, parse_mode='Markdown')
+    except telegram.TelegramError as te:
+        print(colored('TelegramError: {}'.format(str(te)), 'red'))
+        try: 
+            print(colored('Trying to resend with no parse_mode', 'red'))
+            bot.sendMessage(chat_id=CHANNEL_ID, text=new_post)
+        except telegram.TelegramError as te2:
+            print(colored('Second TelegramError: {}'.format(str(te2)), 'red')) 
+            print(colored('SYS: Message was not sent to telegram'), 'grey')
+    except Exception as ex: 
+        print(colored('SEVERE: Internal Error: {}'.format(str(ex)), 'red')
+        print(colored('SYS: Message was not sent to telegram'), 'grey')
     return 'post_to_channel() done running'
 
 
