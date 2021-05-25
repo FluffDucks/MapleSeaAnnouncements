@@ -7,11 +7,12 @@ import telegram
 TBOT_TOKEN = os.getenv('TBOT_TOKEN')
 TCHANNEL_ID = os.getenv('TCHANNEL_ID')
 DEV_TCHANNEL_ID = os.getenv('DEV_TCHANNEL_ID')
-CHANNEL_ID = TCHANNEL_ID # Set initial channel id to dev channel
+CHANNEL_ID = TCHANNEL_ID # Channel to route posts to
 bot = telegram.Bot(token=TBOT_TOKEN) # Run telebot
 
-# Declare heroku vars
+# Other vars
 H_URL = os.getenv('H_URL')
+ACCESS_CODE = os.getenv('ACCESS_CODE')
 
 # start the flask app
 app = Flask(__name__)
@@ -24,13 +25,24 @@ print(colored('SYS:  Welcome :3', 'grey'))
 print(colored('SYS:  1) telebot and server is now live!', 'grey'))
 
 ######### TELE BOT END POINTS ##########
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
+    is_authorised = False
+
+    # If an access code is entered
+    if request.method == 'POST':
+        code = request.form.get('code') 
+        if code == ACCESS_CODE:
+            is_authorised = True
+        else:
+            is_authorised = False
+
+    # Check which channel is live
     if CHANNEL_ID == TCHANNEL_ID:
         channel_name = '[LIVE] MapleSea Announcements (Unofficial)'
     else:
         channel_name = '[DEV] Dev Channel'
-    return render_template('index.html', channel_name=channel_name)
+    return render_template('index.html', channel_name=channel_name, is_authorised=is_authorised)
 
 # Only run this end point when the tele bot has changed
 @app.route('/set_webhook', methods=['GET', 'POST'])
@@ -43,6 +55,10 @@ def set_webhook():
         return "webhook setup ok"
     else:
         return "webhook setup failed"
+
+# @app.route('/toggle_channel', methods=['GET'])
+# def toggle_channel():
+
 
 # When a message is sent to the telebot, telegram calls this endpoint with a request object
 @app.route('/{}'.format(TBOT_TOKEN), methods=['POST'])
@@ -86,7 +102,7 @@ def post_to_channel():
     # }
     content = request.get_json(force=True)
     new_post = '*NEW ANNOUNCEMENT 🍄*\n{}'.format(content.get('body'))
-    bot.sendMessage(chat_id=TCHANNEL_ID, text=new_post, parse_mode='Markdown')
+    bot.sendMessage(chat_id=CHANNEL_ID, text=new_post, parse_mode='Markdown')
     return 'post_to_channel() done running'
 
 
