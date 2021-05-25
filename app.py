@@ -126,7 +126,7 @@ def post_to_channel():
             print(colored('Second TelegramError: {}'.format(str(te2)), 'red')) 
             print(colored('SYS: Message was not sent to telegram'), 'grey')
     except Exception as ex: 
-        print(colored('SEVERE: Internal Error: {}'.format(str(ex)), 'red')
+        print(colored('SEVERE: Internal Error: {}'.format(str(ex)), 'red'))
         print(colored('SYS: Message was not sent to telegram'), 'grey')
     return 'post_to_channel() done running'
 

@@ -2,3 +2,4 @@ __pycache__/
 botenv/
 botenv/lib/*
 .env
+__pycache__/app.cpython-38.pyc
