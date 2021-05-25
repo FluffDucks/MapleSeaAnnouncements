@@ -44,6 +44,8 @@ def index():
             CHANNEL_ID = TCHANNEL_ID if CHANNEL_ID == DEV_TCHANNEL_ID else DEV_TCHANNEL_ID
             # Set to .env such that it persists across application startups
             os.environ['CHANNEL_ID'] = CHANNEL_ID
+            # Revoke authorisation once change is persisted
+            is_authorised = False
 
         # Re-render page
         return redirect(url_for('index'))
