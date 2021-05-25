@@ -120,7 +120,10 @@ def post_to_channel():
     except telegram.TelegramError as te:
         print(colored('TelegramError: {}'.format(str(te)), 'red'))
         try: 
+            # Resend without parsing
             print(colored('Trying to resend with no parse_mode', 'red'))
+            # Remove md from title
+            new_post = 'NEW ANNOUNCEMENT 🍄\n{}'.format(content.get('body'))
             bot.sendMessage(chat_id=CHANNEL_ID, text=new_post)
         except telegram.TelegramError as te2:
             print(colored('Second TelegramError: {}'.format(str(te2)), 'red')) 
