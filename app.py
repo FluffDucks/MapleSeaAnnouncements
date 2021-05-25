@@ -27,6 +27,7 @@ print(colored('SYS:  1) telebot and server is now live!', 'grey'))
 ######### TELE BOT END POINTS ##########
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    global CHANNEL_ID
     is_authorised = False
 
     # If an access code is entered
