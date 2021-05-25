@@ -1,6 +1,6 @@
 import os
 from termcolor import colored
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, url_for
 import telegram
 
 # Declare tele vars
@@ -13,6 +13,7 @@ bot = telegram.Bot(token=TBOT_TOKEN) # Run telebot
 # Other vars
 H_URL = os.getenv('H_URL')
 ACCESS_CODE = os.getenv('ACCESS_CODE')
+is_authorised = False
 
 # start the flask app
 app = Flask(__name__)
@@ -28,20 +29,22 @@ print(colored('SYS:  1) telebot and server is now live!', 'grey'))
 @app.route('/', methods=['GET', 'POST'])
 def index():
     global CHANNEL_ID
-    is_authorised = False
+    global is_authorised
 
     # If an access code is entered
-    if request.method == 'POST' and 'submit_code' in request.form:
-        code = request.form.get('code') 
-        if code == ACCESS_CODE:
-            is_authorised = True
-        else:
-            is_authorised = False
+    if request.method == 'POST': 
+        if 'submit_code' in request.form:
+            code = request.form.get('code') 
+            if code == ACCESS_CODE:
+                is_authorised = True
+            else:
+                is_authorised = False
+        elif 'cc_pls' in request.form:
+            # Toggle CHANNEL_ID
+            CHANNEL_ID = TCHANNEL_ID if CHANNEL_ID == DEV_TCHANNEL_ID else DEV_TCHANNEL_ID
 
-    # If ccpls button is clicked
-    if request.method == 'GET' and 'cc_pls' in request.form:
-        # Toggle CHANNEL_ID
-        CHANNEL_ID = TCHANNEL_ID if CHANNEL_ID == DEV_TCHANNEL_ID else TCHANNEL_ID
+        # Re-render page
+        return redirect(url_for('index'))
 
     # Check which channel is live
     if CHANNEL_ID == TCHANNEL_ID:
