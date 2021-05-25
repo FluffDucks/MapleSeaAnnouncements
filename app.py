@@ -13,7 +13,6 @@ bot = telegram.Bot(token=TBOT_TOKEN) # Run telebot
 # Other vars
 H_URL = os.getenv('H_URL')
 ACCESS_CODE = os.getenv('ACCESS_CODE')
-is_authorised = False
 
 # start the flask app
 app = Flask(__name__)
@@ -29,7 +28,7 @@ print(colored('SYS:  1) telebot and server is now live!', 'grey'))
 @app.route('/', methods=['GET', 'POST'])
 def index():
     global CHANNEL_ID
-    global is_authorised
+    is_authorised = False
 
     # If an access code is entered
     if request.method == 'POST': 
@@ -43,7 +42,7 @@ def index():
             # Toggle CHANNEL_ID
             CHANNEL_ID = TCHANNEL_ID if CHANNEL_ID == DEV_TCHANNEL_ID else DEV_TCHANNEL_ID
 
-        # Re-render page
+        # Re-render page, resetting to fresh state
         return redirect(url_for('index'))
 
     # Check which channel is live
