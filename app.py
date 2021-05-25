@@ -14,7 +14,7 @@ bot = telegram.Bot(token=TBOT_TOKEN) # Run telebot
 H_URL = os.getenv('H_URL')
 
 # start the flask app
-app = Flask(__name__, template_folder='/views')
+app = Flask(__name__)
 if __name__ == '__main__':
     # threaded arg which allows app to have more than one thread
     app.run(threaded=True)
