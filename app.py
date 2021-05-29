@@ -7,7 +7,7 @@ import telegram
 TBOT_TOKEN = os.getenv('TBOT_TOKEN')
 TCHANNEL_ID = os.getenv('TCHANNEL_ID')
 DEV_TCHANNEL_ID = os.getenv('DEV_TCHANNEL_ID')
-CHANNEL_ID = os.getenv('CHANNEL_ID', TCHANNEL_ID) # Channel to route posts to, defaults to MAIN channel if no existing vars found
+CHANNEL_ID = os.getenv('CHANNEL_ID', DEV_TCHANNEL_ID) # Channel to route posts to, defaults to DEV channel if no existing vars found
 bot = telegram.Bot(token=TBOT_TOKEN) # Run telebot
 
 # Other vars
@@ -71,10 +71,6 @@ def set_webhook():
     else:
         return "webhook setup failed"
 
-# @app.route('/toggle_channel', methods=['GET'])
-# def toggle_channel():
-
-
 # When a message is sent to the telebot, telegram calls this endpoint with a request object
 @app.route('/{}'.format(TBOT_TOKEN), methods=['POST'])
 def respond():
@@ -116,6 +112,7 @@ def post_to_channel():
     #   'body': ''
     # }
     content = request.get_json(force=True)
+    print('Post received: {}'.format(content.get('body')))
     new_post = '*NEW ANNOUNCEMENT 🍄*\n{}'.format(content.get('body'))
     try:
         bot.sendMessage(chat_id=CHANNEL_ID, text=new_post, parse_mode='Markdown')
