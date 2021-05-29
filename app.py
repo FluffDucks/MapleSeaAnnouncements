@@ -112,24 +112,27 @@ def post_to_channel():
     #   'body': ''
     # }
     content = request.get_json(force=True)
-    print('Post received: {}'.format(content.get('body')))
+    print(colored('SYS: Post received: {}'.format(content.get('body'), 'grey')))
     new_post = '*NEW ANNOUNCEMENT 🍄*\n{}'.format(content.get('body'))
     try:
         bot.sendMessage(chat_id=CHANNEL_ID, text=new_post, parse_mode='Markdown')
     except telegram.TelegramError as te:
-        print(colored('TelegramError: {}'.format(str(te)), 'red'))
+        print(colored('SYS [ERROR]: TelegramError: {}'.format(str(te)), 'red'))
         try: 
             # Resend without parsing
-            print(colored('Trying to resend with no parse_mode', 'red'))
+            print(colored('SYS: Trying to resend with no parse_mode', 'grey'))
             # Remove md from title
             new_post = 'NEW ANNOUNCEMENT 🍄\n{}'.format(content.get('body'))
             bot.sendMessage(chat_id=CHANNEL_ID, text=new_post)
         except telegram.TelegramError as te2:
-            print(colored('Second TelegramError: {}'.format(str(te2)), 'red')) 
+            print(colored('SYS [ERROR]: Second TelegramError: {}'.format(str(te2)), 'red')) 
             print(colored('SYS: Message was not sent to telegram'), 'grey')
     except Exception as ex: 
-        print(colored('SEVERE: Internal Error: {}'.format(str(ex)), 'red'))
-        print(colored('SYS: Message was not sent to telegram'), 'grey')
+        print(colored('SYS [SEVERE]: Internal Error: {}'.format(str(ex)), 'red'))
+        print(colored('SYS [SEVERE]: Message was not sent to telegram'), 'red')
+
+    # logging
+    print(colored('SYS: post_to_channel() done running'), 'grey')
+
+    # for ui
     return 'post_to_channel() done running'
-
-
