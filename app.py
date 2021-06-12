@@ -7,7 +7,7 @@ import telegram
 TBOT_TOKEN = os.getenv('TBOT_TOKEN')
 TCHANNEL_ID = os.getenv('TCHANNEL_ID')
 DEV_TCHANNEL_ID = os.getenv('DEV_TCHANNEL_ID')
-CHANNEL_ID = os.getenv('CHANNEL_ID', DEV_TCHANNEL_ID) # Channel to route posts to, defaults to DEV channel if no existing vars found
+CHANNEL_ID = os.getenv('CHANNEL_ID', TCHANNEL_ID) # Channel to route posts to, defaults to main channel if no existing vars found
 bot = telegram.Bot(token=TBOT_TOKEN) # Run telebot
 
 # Other vars
